@@ -1,7 +1,5 @@
 FROM hyperf/hyperf:8.2-alpine-v3.19-swoole-slim
 
-COPY *.ini /etc/php/conf.d/
-
 ENV TIMEZONE="America/Sao_Paulo"
 
 RUN set -ex \
@@ -11,7 +9,7 @@ RUN set -ex \
     && php --ri swoole \
     #  ---------- some config ----------
     && cd /etc/php* \
-    { \
+    && { \
         echo "upload_max_filesize=128M"; \
         echo "post_max_size=128M"; \
         echo "memory_limit=1G"; \

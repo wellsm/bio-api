@@ -25,6 +25,5 @@ WORKDIR /var/www/app
 COPY . /var/www/app
 
 RUN composer install
-RUN composer analyse
 
-ENTRYPOINT ["php", "bin/hyperf.php", "migrate", "&&", "composer", "start"]
+ENTRYPOINT ["/bin/sh", "-c" , "php bin/hyperf.php migrate && composer start"]

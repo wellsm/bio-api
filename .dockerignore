@@ -6,4 +6,3 @@
 !migrations/
 !storage/
 !composer.*
-!phpstan.neon

@@ -24,8 +24,12 @@ WORKDIR /var/www/app
 
 COPY . /var/www/app
 
-RUN composer install --no-dev -o
-RUN composer dump-autoload
-RUN php bin/hyperf.php
+RUN ls -la
+RUN echo "-----------------------"
+RUN ls -la /var/www/app
 
-ENTRYPOINT ["php", "/var/www/app/bin/hyperf.php", "start"]
+RUN composer install
+RUN composer analyse
+RUN composer start
+
+ENTRYPOINT ["composer", "start"]

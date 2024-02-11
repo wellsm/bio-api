@@ -8,6 +8,8 @@ use Hyperf\Server\Event;
 use Hyperf\Server\Server;
 use Swoole\Constant;
 
+use function Hyperf\Support\env;
+
 return [
     'mode'      => SWOOLE_PROCESS,
     'servers'   => [
@@ -15,7 +17,7 @@ return [
             'name'      => 'http',
             'type'      => Server::SERVER_HTTP,
             'host'      => '0.0.0.0',
-            'port'      => 9501,
+            'port'      => env('PORT', 9501),
             'sock_type' => SWOOLE_SOCK_TCP,
             'callbacks' => [
                 Event::ON_REQUEST => [\Hyperf\HttpServer\Server::class, 'onRequest'],

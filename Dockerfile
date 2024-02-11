@@ -20,12 +20,12 @@ RUN ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 RUN echo "${TIMEZONE}" > /etc/timezone
 RUN rm -rf /var/cache/apk/* /tmp/* /usr/share/man
 
-WORKDIR /opt/www
+WORKDIR /var/www/app
 
-COPY . /opt/www
+COPY . /var/www/app
 
-RUN composer install --no-dev -o && php bin/hyperf.php
+RUN composer install --no-dev -o
+RUN composer dump-autoload
+RUN php bin/hyperf.php
 
-EXPOSE 9501
-
-ENTRYPOINT ["php", "/opt/www/bin/hyperf.php", "start"]
+ENTRYPOINT ["php", "/var/www/app/bin/hyperf.php", "start"]

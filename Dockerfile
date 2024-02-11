@@ -30,6 +30,5 @@ RUN ls -la /var/www/app
 
 RUN composer install
 RUN composer analyse
-RUN composer start
 
 ENTRYPOINT ["composer", "start"]

@@ -28,7 +28,7 @@ return [
     ],
     'settings'  => [
         Constant::OPTION_ENABLE_COROUTINE      => true,
-        Constant::OPTION_WORKER_NUM            => max(swoole_cpu_num(), 12),
+        Constant::OPTION_WORKER_NUM            => min(swoole_cpu_num(), 12),
         Constant::OPTION_PID_FILE              => BASE_PATH . '/runtime/hyperf.pid',
         Constant::OPTION_OPEN_TCP_NODELAY      => true,
         Constant::OPTION_MAX_COROUTINE         => 100000,

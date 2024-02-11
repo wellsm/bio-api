@@ -1,0 +1,939 @@
+openapi: 3.0.3
+info:
+  title: Bio API
+  version: 1.0.0
+servers:
+  - url: /api
+paths:
+  /bio:
+    get:
+      tags:
+        - Bio
+      summary: Show Bio
+      description: Show Bio with Social Medias, Links and Configurations
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/BioResource'
+        '404':
+          $ref: '#/components/responses/NotFoundResource'
+  
+  /interaction:
+    post:
+      tags:
+        - Interaction
+      summary: Create Interaction
+      description: Create new Interaction
+      requestBody:
+        description: Interaction Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/InteractionRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResource'
+        '422':
+          $ref: '#/components/responses/ValidationResource'
+
+  /users/auth:
+    post:
+      tags:
+        - Users
+      summary: Authenticate an User
+      description: Authenticate an user and return JWT
+      operationId: authUser
+      requestBody:
+        description: Authentication Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/UserAuthRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/AuthResource'
+        '404':
+          $ref: '#/components/responses/NotFoundResource'
+
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Create an User
+      description: Create an User
+      operationId: createUser
+      requestBody:
+        description: User Create Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/UserCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResource'
+        '422':
+          $ref: '#/components/responses/ValidationResource'
+
+  /password:
+    post:
+      tags:
+        - Passwords
+      summary: Set Password
+      description: Set new Password
+      parameters:
+        - in: query
+          name: token
+          schema:
+            type: string
+            example: '123456'
+          required: true
+      requestBody:
+        description: Set Password Request
+        required: true
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/requestBodies/PasswordSetRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResource'
+        '404':
+          description: Token not Found
+        '422':
+          $ref: '#/components/responses/ValidationResource'
+
+  /overview:
+    get:
+      tags:
+        - Overview
+      summary: Show Overview Data
+      description: Dashboard with Clicks, Views and More
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/OverviewResource'
+        '404':
+          $ref: '#/components/responses/NotFoundResource'
+      security:
+        - JWT: []
+
+  /links:
+    get:
+      tags:
+        - Links
+      summary: List Links
+      description: Show All Links with some filters
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+            example: 'Bio'
+        - in: query
+          name: url
+          schema:
+            type: string
+            example: 'bio.com'
+        - in: query
+          name: active
+          schema:
+            type: boolean
+            example: true
+        - $ref: '#/components/parameters/PageParameter'
+        - $ref: '#/components/parameters/PerPageParameter'
+      responses:
+        '200':
+          $ref: '#/components/responses/LinkListResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+
+    post:
+      tags:
+        - Links
+      summary: Create Link
+      description: Create new Link
+      requestBody:
+        description: Link Create Request
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/requestBodies/LinkCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResource'
+        '422':
+          $ref: '#/components/responses/ValidationResource'
+      security:
+        - JWT: []
+
+  /links/{link}:
+    put:  
+      tags:
+        - Links
+      summary: Update Link
+      description: Update one Link
+      parameters:
+        - in: path
+          name: link
+          schema:
+            type: integer
+            format: int32
+          required: true
+          description: Link ID
+      requestBody:
+        description: Link Update Request
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/requestBodies/LinkUpdateRequest'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContentResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+
+    delete:  
+      tags:
+        - Links
+      summary: Delete Link
+      description: Delete one Link
+      parameters:
+        - in: path
+          name: link
+          schema:
+            type: integer
+            format: int32
+          required: true
+          description: Link ID
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContentResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+
+  /links/{link}/toggle:
+    put:  
+      tags:
+        - Links
+      summary: Toggle Status Link
+      description: Toggle Status (Active/Inactive) Link
+      parameters:
+        - in: path
+          name: link
+          schema:
+            type: integer
+            format: int32
+          required: true
+          description: Link ID
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContentResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+
+  /social-medias:
+    get:
+      tags:
+        - Social Medias
+      summary: List Social Medias
+      description: Show All Social Medias
+      responses:
+        '200':
+          $ref: '#/components/responses/SocialMediaListResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+    
+    post:
+      tags:
+        - Social Medias
+      summary: Create Social Media
+      description: Create one Social Media
+      requestBody:
+        description: Social Media Create Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/SocialMediaCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResource'
+        '422':
+          $ref: '#/components/responses/ValidationResource'
+      security:
+        - JWT: []
+  
+  /social-medias/{media}:
+    put:
+      tags:
+        - Social Medias
+      summary: Update Social Media
+      description: Update one Social Media
+      parameters:
+        - in: path
+          name: media
+          schema:
+            type: integer
+            format: int32
+          required: true
+          description: Social Media ID
+      requestBody:
+        description: Social Media Update Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/SocialMediaUpdateRequest'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContentResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+        
+  /social-medias/ordering:
+    put:
+      tags:
+        - Social Medias
+      summary: Ordering of Social Medias
+      description: Update ordering of Social Medias
+      requestBody:
+        description: Social Media Ordering Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/SocialMediaOrderingRequest'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContentResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+
+  /profile:
+    get:
+      tags:
+        - Profile
+      summary: Show Profile
+      description: Show Profile
+      responses:
+        '200':
+          $ref: '#/components/responses/ProfileResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+
+    put:
+      tags:
+        - Profile
+      summary: Update Profile
+      description: Update Profile
+      requestBody:
+        description: Update Profile Request
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/requestBodies/ProfileUpdateRequest'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContentResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+
+  /configs:
+    get:
+      tags:
+        - Configuration
+      summary: List Configurations
+      description: List Configurations
+      responses:
+        '200':
+          $ref: '#/components/responses/ConfigurationResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+
+    put:
+      tags:
+        - Configuration
+      summary: Update Configuration
+      description: Update Configuration
+      requestBody:
+        description: Update Configuration Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/ConfigurationUpdateRequest'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContentResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+
+
+components:
+  parameters:
+    PageParameter:
+      in: query
+      name: page
+      schema:
+        type: integer
+        format: int32
+        min: 1
+        example: 1
+        default: 1
+
+    PerPageParameter:
+      in: query
+      name: per_page
+      schema:
+        type: integer
+        format: int32
+        min: 5
+        max: 50
+        example: 5
+        default: 10
+
+  responses:
+    CreatedResource:
+      description: Created
+
+    NoContentResource:
+      description: No Content
+
+    NotFoundResource:
+      description: Resource not Found
+
+    ValidationResource:
+      description: Validation Errors
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                default: 422
+              errors:
+                type: object
+                example:
+                  example: 
+                    - "O campo exemplo precisa ser válido"
+
+    BioResource:
+      type: object
+      properties:
+        links:
+          type: array
+          items:
+            $ref: '#/components/responses/BioLinkResource'
+        medias:
+          type: array
+          items:
+            $ref: '#/components/responses/BioSocialMediaResource'
+        configs:
+          $ref: '#/components/responses/BioConfigurationResource'
+        profile:
+          $ref: '#/components/responses/BioProfileResource'
+
+    BioLinkResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        title:
+          type: string
+          example: bio
+        url:
+          type: string
+          example: 'bio.com'
+        thumbnail:
+          type: string
+          example: 'bio-1.png'
+        active:
+          type: boolean
+          example: true          
+
+    BioSocialMediaResource:
+      type: object
+      properties:
+        icon:
+          type: string
+          example: far envelope
+        url:
+          type: string
+          example: 'envelope.com'          
+
+    BioConfigurationResource:
+      type: object
+      example:
+        - "enable-search": 0
+      additionalProperties:
+        key:
+          type: string
+          example: 'enable-search'
+        value:
+          type: string
+          example: 0    
+
+    BioProfileResource:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Bio
+        avatar:
+          type: string
+          example: 'bio-1.png' 
+
+    PaginationMetaResource:
+      type: object
+      properties:
+        per_page: 
+          type: integer
+          format: int32
+          example: 15
+        current_page:
+          type: integer
+          format: int32
+          example: 1
+        last_page: 
+          type: integer
+          format: int32
+          example: 1
+        from:
+          type: integer
+          format: int32
+          example: 1
+        to: 
+          type: integer
+          format: int32
+          example: 10
+        path:
+          type: string
+          example: '/pagination'
+        total: 
+          type: integer
+          format: int32
+          example: 10
+
+    PaginationLinkResource:
+      type: object
+      properties:
+        first: 
+          type: strtrng
+          example: "/pagination?page=1"
+        last: 
+          type: strtrng
+          example: "/pagination?page=1"
+        prev: 
+          type: strtrng
+          example: null
+        next: 
+          type: strtrng
+          example: null
+
+    AuthResource:
+      type: object
+      properties:
+        type:
+          type: string
+          default: "Bearer"
+        token:
+          type: string
+
+    OverviewResource:
+      type: object
+      properties:
+        clicks:
+          type: integer
+          format: int32
+          example: 598000
+        views:
+          type: integer
+          format: int32
+          example: 508000
+        ctr:
+          type: number
+          format: float
+          example: 85.4
+        medias:
+          type: integer
+          format: int32
+          example: 50000
+        overview:
+          type: array
+          items:  
+            type: object
+            properties:
+              total:
+                type: integer
+                format: int32
+                example: 42000
+              month:
+                type: integer
+                format: int32
+                enum:
+                  - 1
+                  - 2
+                  - 3
+                  - 4
+                  - 5
+                  - 6
+                  - 7
+                  - 8
+                  - 9
+                  - 10
+                  - 11
+                  - 12
+              year:
+                type: integer
+                format: int32
+                enum:
+                  - 2023
+                  - 2024
+        traffic:
+          type: object
+          properties:
+            medias:
+              type: array
+              items:
+                properties:
+                  column: 
+                    type: string
+                    example: tiktok
+                  clicks:
+                    type: integer
+                    format: int32
+                    example: 20000
+            clicks:
+              type: array
+              items:
+                properties:
+                  column: 
+                    type: string
+                    example: tiktok
+                  clicks:
+                    type: integer
+                    format: int32
+                    example: 20000
+
+
+    LinkListResource:
+      description: Link's List
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              meta:
+                $ref: '#/components/responses/PaginationMetaResource'
+              links:
+                $ref: '#/components/responses/PaginationLinkResource'
+
+    SocialMediaListResource:
+      description: Social Media's List
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/SocialMedia'
+
+    ProfileResource:
+      description: Profile
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Profile'
+
+    ConfigurationResource:
+      description: Profile
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                key:
+                  type: string
+                  example: 'enable-search'
+                value:
+                  type: string
+                  example: '1'
+                name:
+                  type: string
+                  example: 'Enable Search'
+                description:
+                  type: string
+                  example: 'With search, your users can filter your links by link title'
+
+  schemas:
+    Profile:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Bio
+        avatar:
+          type: string
+          example: 'bio-1.png'
+  
+    Link:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        title:
+          type: string
+          example: bio
+        url:
+          type: string
+          example: 'bio.com'
+        thumbnail:
+          type: string
+          example: 'bio-1.png'
+        active:
+          type: boolean
+          example: true
+  
+    SocialMedia:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        icon:
+          type: string
+          example: envelope
+        name:
+          type: string
+          example: bio
+        url:
+          type: string
+          example: 'bio.com'
+        order:
+          type: integer
+          format: int16
+          example: 1
+        
+  requestBodies:
+    InteractionRequest:
+      type: object
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        type:
+          type: string
+          enum:
+            - media
+            - link
+            - view
+
+    UserAuthRequest:
+      type: object
+      required:
+        - phone
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: 'johndoe@bio.com'
+        password:
+          type: string
+          format: password
+          example: 'pa$$word'
+          writeOnly: true
+    
+    PasswordSetRequest:
+      type: object
+      required:
+        - password
+        - password_confirmation
+      properties:
+        password:
+          type: string
+          format: password
+        password_confirmation:
+          type: string
+          format: password
+
+    UserCreateRequest:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: johndoe@bio.com
+
+    LinkCreateRequest:
+      type: object
+      required:
+        - title
+        - url
+        - thumbnail
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        thumbnail:
+          type: string
+          format: binary
+
+    LinkUpdateRequest:
+      type: object
+      required:
+        - title
+        - url
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        thumbnail:
+          type: string
+          format: binary
+
+    SocialMediaCreateRequest:
+      type: object
+      required:
+        - icon
+        - url
+        - order
+      properties:
+        icon:
+          type: string
+          example: envelope
+        url:
+          type: string
+          example: bio.com
+        order:
+          type: integer
+          format: int16
+          example: 1
+
+    SocialMediaUpdateRequest:
+      type: object
+      required:
+        - icon
+        - url
+      properties:
+        icon:
+          type: string
+          example: envelope
+        url:
+          type: string
+          example: bio.com
+        active:
+          type: boolean
+          example: 1
+
+    SocialMediaOrderingRequest:
+      type: array
+      example:
+        - id: 1
+          order: 1
+        - id: 2
+          order: 3
+        - id: 3
+          order: 2
+      items:
+        type: object
+        properties:
+          id: 
+            type: integer
+            format: int32
+            example: 1
+          order:
+            type: integer
+            format: int16
+            example: 1
+
+    ProfileUpdateRequest:
+      type: object
+      required:
+        - name
+        - avatar
+      properties:
+        name:
+          type: string
+        avatar:
+          type: string
+          format: binary
+
+    ConfigurationUpdateRequest:
+      type: object
+      required:
+        - key
+        - value
+      properties:
+        key:
+          type: string
+          example: 'enable-search'
+        value:
+          type: string
+          example: '0'
+  
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

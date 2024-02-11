@@ -1,0 +1,73 @@
+version: "3.8"
+
+networks:
+  bio:
+    external: true
+
+volumes:
+  bio-mysql-data:
+    driver: local
+  
+  bio-redis-data:
+    driver: local
+
+services:
+  bio-nginx:
+    build: ./docker/nginx
+    container_name: bio-nginx
+    ports:
+      - 7010:80
+    networks:
+      - bio
+    depends_on:
+      - bio-php
+
+  bio-php:
+    build: ./docker/php
+    container_name: bio-php
+    working_dir: /var/www/app
+    command: sh -c "composer install && composer watch"
+    volumes:
+      - ./:/var/www/app
+    networks:
+      - bio
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - bio-mysql
+      - bio-redis
+      - bio-mailcatcher
+
+  bio-mysql:
+    build: ./docker/mysql
+    container_name: bio-mysql
+    volumes:
+      - bio-mysql-data:/var/lib/mysql
+    networks:
+      - bio
+    ports:
+      - "7011:3306"
+    environment:
+      - "MYSQL_DATABASE=bio"
+      - "MYSQL_ROOT_PASSWORD=root"
+
+  bio-redis:
+    image: redis:alpine
+    command: redis-server
+    container_name: bio-redis
+    volumes:
+      - bio-redis-data:/data
+    networks:
+      - bio
+    ports:
+      - 7012:6379
+
+  bio-mailcatcher:
+    image: dockage/mailcatcher:0.8.2
+    restart: on-failure
+    container_name: bio-mailcatcher
+    networks:
+      - bio
+    ports:
+      - "7013:1080"
+      - "7014:1025"

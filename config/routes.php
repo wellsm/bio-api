@@ -8,6 +8,8 @@ use Application\Http\Controller;
 use Application\Http\Middleware\VerifyJWTMiddleware;
 
 Router::addGroup('/api', function () {
+    Router::get('/health', fn () => 'Alive');
+
     // ------ Documentation ------
     Router::get('/documentation', Controller\Documentation\IndexController::class);
 

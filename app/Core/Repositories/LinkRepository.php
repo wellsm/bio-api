@@ -12,7 +12,7 @@ use Core\Entities\ProfileEntity;
 
 interface LinkRepository
 {
-    public function getLinkList(LinkListDTO $dto);
+    public function getLinkList(ProfileEntity $profile, LinkListDTO $dto);
 
     public function getLinksByProfile(ProfileEntity $profile);
 

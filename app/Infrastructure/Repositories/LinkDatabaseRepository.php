@@ -16,9 +16,10 @@ use Hyperf\DbConnection\Db;
 
 class LinkDatabaseRepository implements LinkRepository
 {
-    public function getLinkList(LinkListDTO $dto)
+    public function getLinkList(ProfileEntity $profile, LinkListDTO $dto)
     {
-        return Link::whereHas('profile', fn (Builder $query) => $query->where('user_id', $dto->user))
+        return Link::query()
+            ->where('profile_id', $profile->getId())
             ->when($dto->title, fn (Builder $query) => $query->where('title', 'LIKE', '%' . $dto->title . '%'))
             ->when($dto->url, fn (Builder $query) => $query->where('url', 'LIKE', '%' . $dto->url . '%'))
             ->when($dto->active !== null, fn (Builder $query) => $query->where('active', $dto->isActive()))

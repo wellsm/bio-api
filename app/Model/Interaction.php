@@ -18,6 +18,8 @@ class Interaction extends Model
         'id',
         'interactable_id',
         'interactable_type',
+        'created_at',
+        'updated_at',
     ];
 
     protected array $casts = [

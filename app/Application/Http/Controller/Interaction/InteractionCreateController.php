@@ -27,6 +27,8 @@ class InteractionCreateController extends AbstractController
             'id'                => Uuid::uuid4()->toString(),
             'interactable_id'   => $request->post('id'),
             'interactable_type' => $class,
+            'created_at'        => date('Y-m-d H:i:s'),
+            'updated_at'        => date('Y-m-d H:i:s'),
         ]);
 
         return new CreatedResource(null);

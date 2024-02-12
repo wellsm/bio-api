@@ -19,13 +19,13 @@ class OverviewController extends AbstractController
         $views  = Db::table('interactions')->where('interactable_type', Profile::class)->count();
         $clicks = Db::table('interactions')->where('interactable_type', Link::class)->count();
         $medias = Db::table('interactions')->where('interactable_type', SocialMedia::class)->count();
-        $ctr    = (int) round($clicks / $views * 100);
+        $ctr    = $clicks == 0 || $views == 0 ? 0 : (int) round($clicks / $views * 100);
 
         $overview = Db::table('interactions')
             ->selectRaw('COUNT(*) AS total')
             ->selectRaw('MONTH(created_at) AS month')
             ->selectRaw('YEAR(created_at) AS year')
-            ->where('interactable_type', Link::class)
+            ->whereIn('interactable_type', [Link::class, SocialMedia::class])
             ->groupBy(Db::raw('YEAR(created_at)'))
             ->groupBy(Db::raw('MONTH(created_at)'))
             ->get()

@@ -36,6 +36,7 @@ class Link extends Model implements LinkEntity
         'url',
         'thumbnail',
         'active',
+        'fixed',
     ];
 
     protected array $hidden = [
@@ -128,6 +129,18 @@ class Link extends Model implements LinkEntity
     public function setActive(bool $active): self
     {
         $this->attributes['active'] = $active;
+
+        return $this;
+    }
+
+    public function isFixed(): bool
+    {
+        return $this->attributes['fixed'] ?? false;
+    }
+
+    public function setFixed(bool $fixed): self
+    {
+        $this->attributes['fixed'] = $fixed;
 
         return $this;
     }

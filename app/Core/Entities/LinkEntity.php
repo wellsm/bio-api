@@ -33,5 +33,9 @@ interface LinkEntity extends DateTimes, SoftDeletable
 
     public function setActive(bool $active): self;
 
+    public function isFixed(): bool;
+
+    public function setFixed(bool $fixed): self;
+
     public function toArray(): array;
 }

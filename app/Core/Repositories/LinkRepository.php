@@ -24,5 +24,7 @@ interface LinkRepository
 
     public function toggleLink(int $id): void;
 
+    public function toggleFixedLink(int $id): void;
+
     public function deleteLink(int $id): void;
 }

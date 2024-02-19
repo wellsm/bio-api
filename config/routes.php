@@ -32,6 +32,7 @@ Router::addGroup('/api', function () {
         Router::post('/links', Controller\Link\LinkCreateController::class);
         Router::put('/links/{link}', Controller\Link\LinkUpdateController::class);
         Router::put('/links/{link}/toggle', Controller\Link\LinkToggleController::class);
+        Router::put('/links/{link}/toggle/fixed', Controller\Link\LinkToggleFixedController::class);
         Router::delete('/links/{link}', Controller\Link\LinkDeleteController::class);
 
         // ------ Social Media ------

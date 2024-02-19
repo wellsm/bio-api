@@ -23,14 +23,17 @@ class LinkDatabaseRepository implements LinkRepository
             ->when($dto->title, fn (Builder $query) => $query->where('title', 'LIKE', '%' . $dto->title . '%'))
             ->when($dto->url, fn (Builder $query) => $query->where('url', 'LIKE', '%' . $dto->url . '%'))
             ->when($dto->active !== null, fn (Builder $query) => $query->where('active', $dto->isActive()))
+            ->when($dto->fixed !== null, fn (Builder $query) => $query->where('fixed', $dto->isFixed()))
             ->orderBy('id', 'DESC')
             ->paginate(perPage: $dto->perPage, page: $dto->getPage());
     }
 
     public function getLinksByProfile(ProfileEntity $profile)
     {
-        return Link::where('profile_id', $profile->getId())
+        return Link::query()
+            ->where('profile_id', $profile->getId())
             ->where('active', 1)
+            ->orderBy('fixed', 'DESC')
             ->orderBy('id', 'DESC')
             ->get();
     }
@@ -67,6 +70,13 @@ class LinkDatabaseRepository implements LinkRepository
         Link::query()
             ->where('id', $id)
             ->update(['active' => Db::raw('NOT active')]);
+    }
+
+    public function toggleFixedLink(int $id): void
+    {
+        Link::query()
+            ->where('id', $id)
+            ->update(['fixed' => Db::raw('NOT fixed')]);
     }
 
     public function deleteLink(int $id): void

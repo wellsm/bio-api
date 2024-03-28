@@ -41,6 +41,8 @@ class SocialMedia
     private const GITHUB         = 'github';
     private const GITLAB         = 'gitlab';
     private const BITBUCKET      = 'bitbucket';
+    private const SHOPIFY        = 'shopify';
+    private const EXTERNAL       = 'external';
 
     public const ICONS = [
         [ 'family' => "fab", 'icon' => "dribbble", 'media' => self::DRIBBLE ],
@@ -94,6 +96,10 @@ class SocialMedia
         [ 'family' => "fab", 'icon' => "gitlab", 'media' => self::GITLAB ],
         [ 'family' => "fab", 'icon' => "square-gitlab", 'media' => self::GITLAB ],
         [ 'family' => "fab", 'icon' => "bitbucket", 'media' => self::BITBUCKET ],
+        [ 'family' => "fab", 'icon' => "shopify", 'media' => self::SHOPIFY ],
+        [ 'family' => "fab", 'icon' => "shop", 'media' => self::EXTERNAL ],
+        [ 'family' => "fas", 'icon' => "bag-shopping", 'media' => self::EXTERNAL ],
+        [ 'family' => "fas", 'icon' => "cart-shopping", 'media' => self::EXTERNAL ],
     ];
 
     public static function getName(string $icon): ?string

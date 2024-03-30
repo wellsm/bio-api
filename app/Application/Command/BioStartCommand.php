@@ -4,7 +4,6 @@ namespace Application\Command;
 
 use Application\Service\Bio\BioStart;
 use Core\DTO\Bio\BioStartDTO;
-use Core\Enums\BioStartStep;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Contract\ValidatorInterface;

@@ -11,5 +11,5 @@ interface ConfigurationRepository
 {
     public function getConfigurationsByProfile(ProfileEntity $profile): array;
 
-    public function updateConfiguration(ProfileEntity $profile, ConfigurationDTO $dto);
+    public function upsertConfiguration(ProfileEntity $profile, ConfigurationDTO $dto);
 }

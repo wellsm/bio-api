@@ -10,8 +10,21 @@ use SplFileInfo;
 
 final class LinkCreateDTO extends DTO
 {
-    public ?ProfileEntity $profile;
+    private const string FILENAME = '%s/uploads/%s.%s';
+
     public string $title;
     public string $url;
-    public string|SplFileInfo $thumbnail;
+    public string|SplFileInfo|null $thumbnail;
+
+    public function getPath(): string
+    {
+        return BASE_PATH . '/public';
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->thumbnail === null
+            ? null
+            : sprintf(self::FILENAME, $this->getPath(), uniqid(), $this->thumbnail->getExtension());
+    }
 }

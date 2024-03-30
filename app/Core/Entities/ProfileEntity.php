@@ -12,6 +12,8 @@ interface ProfileEntity extends DateTimes
 
     public function getUser(): UserEntity;
 
+    public function setUserId(int $user): self;
+
     public function getName(): string;
 
     public function setName(string $name): self;
@@ -20,9 +22,9 @@ interface ProfileEntity extends DateTimes
 
     public function setUsername(string $username): self;
 
-    public function getAvatar(): string;
+    public function getAvatar(): ?string;
 
-    public function setAvatar(string $avatar): self;
+    public function setAvatar(?string $avatar): self;
 
     public function toArray(): array;
 }

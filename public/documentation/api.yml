@@ -20,6 +20,8 @@ paths:
                 $ref: '#/components/responses/BioResource'
         '404':
           $ref: '#/components/responses/NotFoundResource'
+      security:
+        - ProfileKey: []
   
   /interaction:
     post:
@@ -352,6 +354,26 @@ paths:
       security:
         - JWT: []
 
+    post:
+      tags:
+        - Profile
+      summary: Create Profile
+      description: Add new Profile
+      requestBody:
+        description: Social Media Ordering Request
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/requestBodies/ProfileCreateRequest'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContentResource'
+        '404':
+          description: Token not Found
+      security:
+        - JWT: []
+  
     put:
       tags:
         - Profile
@@ -656,7 +678,6 @@ components:
                     format: int32
                     example: 20000
 
-
     LinkListResource:
       description: Link's List
       content:
@@ -907,6 +928,22 @@ components:
             format: int16
             example: 1
 
+    ProfileCreateRequest:
+      type: object
+      required:
+        - name
+        - username
+      properties:
+        name:
+          type: string
+          default: John Doe
+        username:
+          type: string
+          default: john-doe
+        avatar:
+          type: string
+          format: binary
+
     ProfileUpdateRequest:
       type: object
       required:
@@ -915,6 +952,7 @@ components:
       properties:
         name:
           type: string
+          default: John Doe
         avatar:
           type: string
           format: binary
@@ -937,3 +975,8 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+    ProfileKey:
+      type: apiKey
+      in: header
+      name: X-PROFILE-KEY

@@ -4,19 +4,24 @@ declare(strict_types=1);
 
 namespace Application\Http\Controller\Config;
 
+use App\Model\Configuration;
 use Application\Http\Controller\Common\AbstractController;
+use Application\Service\Configuration\Config;
+use Core\Enums\BioLayout;
+use Core\Enums\ShowNumber;
+use Core\Helper\Util;
 use Hyperf\DbConnection\Db;
 
 class ConfigListController extends AbstractController
 {
-    private const ENABLE_SEARCH = 'enable-search';
-
     private const NAMES = [
-        self::ENABLE_SEARCH => 'Enable Search',
+        Config::SEARCH => 'Enable Search',
+        Config::LAYOUT => 'Bio Layout',
     ];
 
     private const DESCRIPTIONS = [
-        self::ENABLE_SEARCH => 'With search, your users can filter your links by link title',
+        Config::SEARCH => 'With search, your users can filter your links by link title',
+        Config::LAYOUT => 'Change your Bio Layout to better serve your users',
     ];
 
     public function __invoke()
@@ -35,7 +40,19 @@ class ConfigListController extends AbstractController
                 'key'         => $config['key'],
                 'value'       => $config['value'],
                 'description' => $config['description'],
+                'options'     => $this->options($config['key']),
             ];
-        }, $configs);
+        }, $configs); 
+    }
+
+    private function options(string $key): array
+    {
+        return match ($key) {
+            Config::LAYOUT => Util::options([
+                BioLayout::List->value => 'List',
+                BioLayout::Grid->value => 'Grid',
+            ]),
+            default => []
+        };
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Infrastructure\Repositories;
 
 use App\Model\Link;
+use Application\DTO\File\UploadDTO;
 use Core\DTO\Link\LinkCreateDTO;
 use Core\DTO\Link\LinkListDTO;
 use Core\DTO\Link\LinkUpdateDTO;
@@ -38,13 +39,13 @@ class LinkDatabaseRepository implements LinkRepository
             ->get();
     }
 
-    public function createLink(LinkCreateDTO $dto): void
+    public function createLink(ProfileEntity $profile, LinkCreateDTO $dto, ?UploadDTO $upload): void
     {
         Link::create([
             'title'      => $dto->title,
             'url'        => $dto->url,
-            'thumbnail'  => $dto->thumbnail,
-            'profile_id' => $dto->profile->getId(),
+            'thumbnail'  => $upload->filename,
+            'profile_id' => $profile->getId(),
             'active'     => false
         ]);
     }

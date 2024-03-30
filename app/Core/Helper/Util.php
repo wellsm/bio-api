@@ -23,4 +23,15 @@ class Util
 
         return $result;
     }
+
+    public static function options(array $values): array
+    {
+        $options = [];
+
+        foreach ($values as $key => $value) {
+            $options[] = compact('key', 'value');
+        }
+
+        return $options;
+    }
 }

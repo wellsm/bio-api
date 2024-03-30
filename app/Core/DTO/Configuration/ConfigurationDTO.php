@@ -9,5 +9,5 @@ use Core\Common\DTO;
 final class ConfigurationDTO extends DTO
 {
     public string $key;
-    public bool|string|null $value;
+    public bool|string|int|null $value;
 }

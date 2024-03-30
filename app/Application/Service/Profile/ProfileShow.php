@@ -17,12 +17,19 @@ class ProfileShow
         private ProfileRepository $repository
     ) {}
 
-    public function run(int $id = self::PROFILE): ProfileEntity
+    public function run(?int $id = self::PROFILE): ProfileEntity
     {
-        $profile = Context::get(App::PROFILE) ?? $this->repository->getProfileById($id);
+        $profile = Context::get(App::PROFILE)
+            ?? $this->getProfileById($id)
+            ?? $this->repository->getFirstProfile();
 
         Context::set(App::PROFILE, $profile);
 
         return $profile;
+    }
+
+    private function getProfileById(?int $id): ?ProfileEntity
+    {
+        return empty($id) ? null : $this->repository->getProfileById($id);
     }
 }

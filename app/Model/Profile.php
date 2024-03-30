@@ -48,6 +48,13 @@ class Profile extends Model implements ProfileEntity
         return $this->getAttribute('user');
     }
 
+    public function setUserId(int $user): self
+    {
+        $this->attributes['user_id'] = $user;
+
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->attributes['name'];
@@ -72,12 +79,12 @@ class Profile extends Model implements ProfileEntity
         return $this;
     }
 
-    public function getAvatar(): string
+    public function getAvatar(): ?string
     {
-        return $this->attributes['avatar'];
+        return $this->attributes['avatar'] ?? null;
     }
 
-    public function setAvatar(string $avatar): self
+    public function setAvatar(?string $avatar): self
     {
         $this->attributes['avatar'] = $avatar;
 

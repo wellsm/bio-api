@@ -8,6 +8,7 @@ use App\Model\Configuration;
 use Core\DTO\Configuration\ConfigurationDTO;
 use Core\Entities\ProfileEntity;
 use Core\Repositories\ConfigurationRepository;
+use Hyperf\DbConnection\Db;
 
 class ConfigurationDatabaseRepository implements ConfigurationRepository
 {
@@ -19,8 +20,16 @@ class ConfigurationDatabaseRepository implements ConfigurationRepository
             ->toArray();
     }
 
-    public function updateConfiguration(ProfileEntity $profile, ConfigurationDTO $dto)
+    public function upsertConfiguration(ProfileEntity $profile, ConfigurationDTO $dto)
     {
-        
+        return Db::table('configurations')
+            ->upsert([
+                [
+                    ...$dto->values(),
+                    ...[
+                        'profile_id' => $profile->getId()
+                    ]
+                ]
+            ], ['key', 'profile_id']);
     }
 }

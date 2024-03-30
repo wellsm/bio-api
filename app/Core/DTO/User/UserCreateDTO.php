@@ -11,15 +11,9 @@ final class UserCreateDTO extends DTO
 {
     public string $name;
     public string $email;
-    public string $token;
 
     public function getEmail(): EmailValueObject
     {
         return new EmailValueObject($this->email);
-    }
-
-    public function getToken(): string
-    {
-        return bin2hex(random_bytes(64));
     }
 }

@@ -7,12 +7,19 @@ namespace Application\Service\Configuration;
 use Application\Constants\App;
 use Core\DTO\Configuration\ConfigurationDTO;
 use Core\Entities\ProfileEntity;
+use Core\Enums\BioLayout;
 use Core\Repositories\ConfigurationRepository;
 use Hyperf\Context\Context;
 
 class Config
 {
-    public const ENABLE_SEARCH = 'enable-search';
+    public const SEARCH = 'enable-search';
+    public const LAYOUT = 'layout';
+
+    public const CONFIGS = [
+        self::SEARCH => 0,
+        self::LAYOUT => BioLayout::List->value,
+    ];
 
     public function __construct(
         private ConfigurationRepository $repository,
@@ -21,23 +28,12 @@ class Config
 
     public function run(ProfileEntity $profile, ConfigurationDTO $dto): bool|string
     {
-        $configurations = $this->configs->run($profile);
+        $this->repository->upsertConfiguration($profile, $dto);
 
-        $this->update($profile, $dto, $configurations);
+        $configurations = $this->repository->getConfigurationsByProfile($profile);
 
         Context::set(App::CONFIGS, $configurations);
 
         return $configurations[$dto->key];
-    }
-
-    private function update(ProfileEntity $profile, ConfigurationDTO $dto, array $configurations): array
-    {
-        if ($dto->value === null) {
-            return $configurations;
-        }
-
-        $this->repository->updateConfiguration($profile, $dto);
-
-        return array_merge($configurations, [$dto->key => $dto->value]);
     }
 }

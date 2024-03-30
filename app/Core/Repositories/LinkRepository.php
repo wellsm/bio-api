@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Repositories;
 
+use Application\DTO\File\UploadDTO;
 use Core\DTO\Link\LinkCreateDTO;
 use Core\DTO\Link\LinkListDTO;
 use Core\DTO\Link\LinkUpdateDTO;
@@ -16,7 +17,7 @@ interface LinkRepository
 
     public function getLinksByProfile(ProfileEntity $profile);
 
-    public function createLink(LinkCreateDTO $dto): void;
+    public function createLink(ProfileEntity $profile, LinkCreateDTO $dto, ?UploadDTO $upload): void;
 
     public function getLinkById(int $id): LinkEntity;
 

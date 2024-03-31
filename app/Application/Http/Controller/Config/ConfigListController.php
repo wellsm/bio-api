@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace Application\Http\Controller\Config;
 
-use App\Model\Configuration;
 use Application\Http\Controller\Common\AbstractController;
 use Application\Service\Configuration\Config;
 use Core\Enums\BioLayout;
-use Core\Enums\ShowNumber;
 use Core\Helper\Util;
 use Hyperf\DbConnection\Db;
 
 class ConfigListController extends AbstractController
 {
     private const NAMES = [
-        Config::SEARCH => 'Enable Search',
-        Config::LAYOUT => 'Bio Layout',
+        Config::SEARCH        => 'Enable Search',
+        Config::LAYOUT        => 'Bio Layout',
+        Config::TAG_PINTEREST => 'Tag do Pinterest'
     ];
 
     private const DESCRIPTIONS = [
-        Config::SEARCH => 'With search, your users can filter your links by link title',
-        Config::LAYOUT => 'Change your Bio Layout to better serve your users',
+        Config::SEARCH        => 'With search, your users can filter your links by link title',
+        Config::LAYOUT        => 'Change your Bio Layout to better serve your users',
+        Config::TAG_PINTEREST => 'Connect your Pinterest to your Bio, need to add TXT Record to your domain',
     ];
 
     public function __invoke()
@@ -41,6 +41,7 @@ class ConfigListController extends AbstractController
                 'value'       => $config['value'],
                 'description' => $config['description'],
                 'options'     => $this->options($config['key']),
+                'type'        => $this->type($config['key']),
             ];
         }, $configs); 
     }
@@ -53,6 +54,15 @@ class ConfigListController extends AbstractController
                 BioLayout::Grid->value => 'Grid',
             ]),
             default => []
+        };
+    }
+
+    private function type(string $key): string
+    {
+        return match ($key) {
+            Config::LAYOUT        => 'select',
+            Config::SEARCH        => 'toggle',
+            Config::TAG_PINTEREST => 'input:text',
         };
     }
 }

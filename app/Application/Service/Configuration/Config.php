@@ -13,12 +13,14 @@ use Hyperf\Context\Context;
 
 class Config
 {
-    public const SEARCH = 'enable-search';
-    public const LAYOUT = 'layout';
+    public const string SEARCH        = 'enable-search';
+    public const string LAYOUT        = 'layout';
+    public const string TAG_PINTEREST = 'tag-pinterest';
 
     public const CONFIGS = [
-        self::SEARCH => 0,
-        self::LAYOUT => BioLayout::List->value,
+        self::SEARCH        => 0,
+        self::LAYOUT        => BioLayout::List->value,
+        self::TAG_PINTEREST => ''
     ];
 
     public function __construct(

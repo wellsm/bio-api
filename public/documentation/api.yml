@@ -120,6 +120,12 @@ paths:
         - Overview
       summary: Show Overview Data
       description: Dashboard with Clicks, Views and More
+      parameters:
+        - in: query
+          name: range
+          schema:
+            type: string
+            example: '2024-03-01 - 2024-04-01'
       responses:
         '200':
           description: Successful operation

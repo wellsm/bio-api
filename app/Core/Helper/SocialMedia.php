@@ -42,6 +42,7 @@ class SocialMedia
     private const GITLAB         = 'gitlab';
     private const BITBUCKET      = 'bitbucket';
     private const SHOPIFY        = 'shopify';
+    private const KWAI           = 'kwai';
     private const EXTERNAL       = 'external';
 
     public const ICONS = [
@@ -100,6 +101,7 @@ class SocialMedia
         [ 'family' => "fab", 'icon' => "shop", 'media' => self::EXTERNAL ],
         [ 'family' => "fas", 'icon' => "bag-shopping", 'media' => self::EXTERNAL ],
         [ 'family' => "fas", 'icon' => "cart-shopping", 'media' => self::EXTERNAL ],
+        [ 'family' => "fas", 'icon' => "kwai", 'media' => self::KWAI ],
     ];
 
     public static function getName(string $icon): ?string

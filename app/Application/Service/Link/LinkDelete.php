@@ -8,13 +8,11 @@ use Core\Repositories\LinkRepository;
 
 class LinkDelete
 {
-    private const PROFILE = 1;
-
     public function __construct(
         private LinkRepository $repository
     ) {}
 
-    public function run(int $id = self::PROFILE): void
+    public function run(int $id): void
     {
         $this->repository->deleteLink($id);
     }

@@ -15,6 +15,8 @@ interface LinkRepository
 {
     public function getLinkList(ProfileEntity $profile, LinkListDTO $dto);
 
+    public function getLinkCollectionList(ProfileEntity $profile);
+
     public function getLinksByProfile(ProfileEntity $profile);
 
     public function createLink(ProfileEntity $profile, LinkCreateDTO $dto, ?UploadDTO $upload): void;

@@ -29,6 +29,15 @@ class LinkDatabaseRepository implements LinkRepository
             ->paginate(perPage: $dto->perPage, page: $dto->getPage());
     }
 
+    public function getLinkCollectionList(ProfileEntity $profile)
+    {
+        return Link::query()
+            ->where('profile_id', $profile->getId())
+            ->orderBy('fixed', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->get();
+    }
+
     public function getLinksByProfile(ProfileEntity $profile)
     {
         return Link::query()

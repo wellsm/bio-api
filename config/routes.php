@@ -24,6 +24,7 @@ Router::addGroup('/api', function () {
     Router::addGroup('', function () {
         // ------ Bio ------
         Router::get('/bio', Controller\Bio\IndexController::class);
+        Router::get('/bio/collections/{collection}', Controller\Bio\CollectionController::class);
         Router::post('/interaction', Controller\Interaction\InteractionCreateController::class);
     }, [
         'middleware' => [VerifyProfileKeyMiddleware::class]
@@ -35,6 +36,13 @@ Router::addGroup('/api', function () {
 
         Router::addGroup('', function () {
             Router::get('/overview', Controller\Overview\OverviewController::class);
+
+            // ------ Collection ------
+            Router::get('/collections', Controller\Collection\CollectionListController::class);
+            Router::get('/collections/links', Controller\Collection\CollectionLinkListController::class);
+            Router::post('/collections', Controller\Collection\CollectionCreateController::class);
+            Router::put('/collections/{collection}', Controller\Collection\CollectionUpdateController::class);
+            Router::delete('/collections/{collection}', Controller\Collection\CollectionDeleteController::class);
         
             // ------ Link ------
             Router::get('/links', Controller\Link\LinkListController::class);

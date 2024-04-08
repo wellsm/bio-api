@@ -13,6 +13,8 @@ final class SocialMediaUpdateDTO extends DTO
     public string $url;
     public string $icon;
     public int|string $active;
+    public string $textColor;
+    public string $background;
 
     public function getName(): ?string
     {

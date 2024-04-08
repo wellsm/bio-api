@@ -12,6 +12,8 @@ interface SocialMediaEntity extends DateTimes
 
     public function getProfile(): ProfileEntity;
 
+    public function setProfile(ProfileEntity $profile): self;
+
     public function getIcon(): string;
 
     public function setIcon(string $icon): self;

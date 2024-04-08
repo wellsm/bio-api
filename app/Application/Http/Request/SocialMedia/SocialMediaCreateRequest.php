@@ -16,8 +16,10 @@ class SocialMediaCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'icon' => 'required',
-            'url'  => 'required',
+            'icon'       => 'required',
+            'url'        => 'required',
+            'text_color' => 'required',
+            'background' => 'required',
         ];
     }
 }

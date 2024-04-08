@@ -23,10 +23,12 @@ class SocialMediaUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id'     => 'required|numeric',
-            'url'    => 'required',
-            'icon'   => 'required',
-            'active' => 'required|boolean'
+            'id'         => 'required|numeric',
+            'url'        => 'required',
+            'icon'       => 'required',
+            'active'     => 'required|boolean',
+            'text_color' => 'required',
+            'background' => 'required',
         ];
     }
 }

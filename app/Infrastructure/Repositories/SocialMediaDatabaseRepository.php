@@ -29,27 +29,32 @@ class SocialMediaDatabaseRepository implements SocialMediaRepository
     {
         $order = Db::table('social_medias')->select('order')->orderByDesc('order')->first();
 
-        SocialMedia::create([
-            'profile_id' => $profile->getId(),
-            'icon'       => $dto->icon,
-            'name'       => $dto->getName(),
-            'url'        => $dto->url,
-            'order'      => ($order['order'] ?? 0) + 1,
-            'active'     => true
-        ]);
+        $media = new SocialMedia();
+        $media->setProfile($profile);
+        $media->setIcon($dto->icon);
+        $media->setName($dto->getName());
+        $media->setUrl($dto->url);
+        $media->setOrder(($order['order'] ?? 0) + 1);
+        $media->setActive(true);
+        $media->setTextColor($dto->textColor);
+        $media->setBackground($dto->background);
+
+        $media->save();
     }
 
     public function updateSocialMedia(ProfileEntity $profile, SocialMediaUpdateDTO $dto): void
     {
-        SocialMedia::query()
-            ->where('id', $dto->id)
-            ->update([
-                'profile_id' => $profile->getId(),
-                'icon'       => $dto->icon,
-                'name'       => $dto->getName(),
-                'url'        => $dto->url,
-                'active'     => (bool) $dto->active
-            ]);
+        $media = SocialMedia::query()->find($dto->id);
+
+        $media->setProfile($profile);
+        $media->setIcon($dto->icon);
+        $media->setName($dto->getName());
+        $media->setUrl($dto->url);
+        $media->setActive((bool) $dto->active);
+        $media->setTextColor($dto->textColor);
+        $media->setBackground($dto->background);
+
+        $media->save();
     }
 
     public function orderSocialMedias(ProfileEntity $profile, array $medias): void

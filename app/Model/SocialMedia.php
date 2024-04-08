@@ -57,6 +57,13 @@ class SocialMedia extends Model implements SocialMediaEntity
         return $this->getAttribute('profile');
     }
 
+    public function setProfile(ProfileEntity $profile): self
+    {
+        $this->attributes['profile_id'] = $profile->getId();
+
+        return $this;
+    }
+
     public function getIcon(): string
     {
         return $this->attributes['icon'];

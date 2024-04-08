@@ -29,6 +29,10 @@ class SocialMediaListResource extends JsonResource
                     'family' => $icon[0],
                     'icon'   => $icon[1]
                 ],
+                'colors' => [
+                    'text'       => $media->getTextColor(),
+                    'background' => $media->getBackground(),
+                ]
             ];
         })->toArray();
     }

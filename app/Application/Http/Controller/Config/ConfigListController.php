@@ -7,32 +7,22 @@ namespace Application\Http\Controller\Config;
 use Application\Http\Controller\Common\AbstractController;
 use Application\Service\Configuration\Config;
 use Core\Enums\BioLayout;
+use Core\Enums\IconStyle;
 use Core\Helper\Util;
 use Hyperf\DbConnection\Db;
 
 class ConfigListController extends AbstractController
 {
-    private const NAMES = [
-        Config::SEARCH        => 'Enable Search',
-        Config::LAYOUT        => 'Bio Layout',
-        Config::TAG_PINTEREST => 'Tag do Pinterest'
-    ];
-
-    private const DESCRIPTIONS = [
-        Config::SEARCH        => 'With search, your users can filter your links by link title',
-        Config::LAYOUT        => 'Change your Bio Layout to better serve your users',
-        Config::TAG_PINTEREST => 'Connect your Pinterest to your Bio, need to add TXT Record to your domain',
-    ];
-
     public function __invoke()
     {
         $profile = Db::table('profiles')->first();
         $configs = Db::table('configurations')->where('profile_id', $profile['id'])->get()->toArray();
 
         foreach ($configs as $key => $value) {
-            $configs[$key]['name']        = self::NAMES[$value['key']];
-            $configs[$key]['description'] = self::DESCRIPTIONS[$value['key']];
+            $configs[$key]['name']        = Config::NAMES[$value['key']];
+            $configs[$key]['description'] = Config::DESCRIPTIONS[$value['key']];
         }
+
 
         return array_map(function ($config) {
             return [
@@ -48,10 +38,15 @@ class ConfigListController extends AbstractController
 
     private function options(string $key): array
     {
-        return match ($key) {
+        return match ((string) $key) {
             Config::LAYOUT => Util::options([
                 BioLayout::List->value => 'List',
                 BioLayout::Grid->value => 'Grid',
+            ]),
+            Config::ICON_STYLE => Util::options([
+                IconStyle::Circle->value        => 'Circle',
+                IconStyle::Square->value        => 'Square',
+                IconStyle::RoundedSquare->value => 'Rounded Square',
             ]),
             default => []
         };
@@ -63,6 +58,7 @@ class ConfigListController extends AbstractController
             Config::LAYOUT        => 'select',
             Config::SEARCH        => 'toggle',
             Config::TAG_PINTEREST => 'input:text',
+            Config::ICON_STYLE    => 'select',
         };
     }
 }

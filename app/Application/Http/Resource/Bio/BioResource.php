@@ -19,13 +19,11 @@ class BioResource extends JsonResource
                 'name'   => $this->resource['profile']->getName(),
                 'avatar' => $this->resource['profile']->getAvatar()
             ],
-            'medias' => $this->resource['medias']->map(
-                fn (SocialMediaEntity $media) => new BioSocialMediaResource($media)
-            ),
+            'medias'  => $this->resource['medias']
+                ->map(fn (SocialMediaEntity $media) => new BioSocialMediaResource($media)),
             'configs' => $this->resource['configs'],
-            'links'   => $this->resource['links']->map(
-                fn (LinkEntity $media) => new BioLinkResource($media)
-            ),
+            'links'   => $this->resource['links']
+                ->map(fn (LinkEntity $media) => new BioLinkResource($media)),
         ];
     }
 }

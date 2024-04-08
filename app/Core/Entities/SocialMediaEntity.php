@@ -24,6 +24,14 @@ interface SocialMediaEntity extends DateTimes
 
     public function setUrl(string $url): self;
 
+    public function getTextColor(): string;
+
+    public function setTextColor(string $textColor): self;
+
+    public function getBackground(): string;
+
+    public function setBackground(string $background): self;
+
     public function getOrder(): int;
 
     public function setOrder(int $order): self;

@@ -24,7 +24,11 @@ class BioSocialMediaResource extends JsonResource
                 'family' => $icon[0],
                 'icon'   => $icon[1]
             ],
-            'url'  => $this->resource->getUrl(),
+            'url'   => $this->resource->getUrl(),
+            'colors' => [
+                'text'       => $this->resource->getTextColor(),
+                'background' => $this->resource->getBackground(),
+            ],
         ];
     }
 }

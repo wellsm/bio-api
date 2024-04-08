@@ -15,6 +15,8 @@ use Hyperf\Database\Model\Relations\BelongsTo;
  * @property string $icon 
  * @property string $name 
  * @property string $url 
+ * @property string $text_color 
+ * @property string $background 
  * @property \Carbon\Carbon $created_at 
  * @property \Carbon\Carbon $updated_at 
  */
@@ -27,6 +29,8 @@ class SocialMedia extends Model implements SocialMediaEntity
         'icon',
         'name',
         'url',
+        'text_color',
+        'background',
         'order',
         'active',
     ];
@@ -85,6 +89,30 @@ class SocialMedia extends Model implements SocialMediaEntity
     public function setUrl(string $url): self
     {
         $this->attributes['url'] = $url;
+
+        return $this;
+    }
+
+    public function getTextColor(): string
+    {
+        return $this->attributes['text_color'];
+    }
+
+    public function setTextColor(string $textColor): self
+    {
+        $this->attributes['text_color'] = $textColor;
+
+        return $this;
+    }
+
+    public function getBackground(): string
+    {
+        return $this->attributes['background'];
+    }
+
+    public function setBackground(string $background): self
+    {
+        $this->attributes['background'] = $background;
 
         return $this;
     }

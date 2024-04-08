@@ -12,10 +12,8 @@ use Core\Entities\ProfileEntity;
 use Core\Repositories\SocialMediaRepository;
 use Hyperf\Database\Model\Builder;
 use Hyperf\DbConnection\Db;
-use Hyperf\Validation\UnauthorizedException;
 use Teapot\StatusCode\Http;
 
-use function Hyperf\Collection\data_fill;
 
 class SocialMediaDatabaseRepository implements SocialMediaRepository
 {

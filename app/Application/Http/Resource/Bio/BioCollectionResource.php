@@ -23,7 +23,9 @@ class BioCollectionResource extends JsonResource
             'medias' => $this->resource['medias']->map(
                 fn (SocialMediaEntity $media) => new BioSocialMediaResource($media)
             ),
-            'configs'    => array_filter($this->resource['configs'], fn ($key) => $key === Config::LAYOUT, ARRAY_FILTER_USE_KEY),
+            'configs' => array_filter($this->resource['configs'], static function ($key) {
+                return in_array($key, [Config::LAYOUT, Config::ICON_STYLE]);
+            }, ARRAY_FILTER_USE_KEY),
             'collection' => [
                 'name'        => $this->resource['collection']->getName(),
                 'description' => $this->resource['collection']->getDescription(),

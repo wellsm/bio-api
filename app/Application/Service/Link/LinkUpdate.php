@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Application\Service\Link;
 
 use Application\Service\Profile\ProfileShow;
+use Application\Service\ShortUrl\ShortUrlUpdate;
 use Core\DTO\Link\LinkUpdateDTO;
 use Core\Repositories\LinkRepository;
 use Hyperf\DbConnection\Db;
@@ -14,6 +15,7 @@ class LinkUpdate
 {
     public function __construct(
         private ProfileShow $profile,
+        private ShortUrlUpdate $shortUrl,
         private LinkShow $link,
         private LinkRepository $repository,
         private Db $db,
@@ -27,6 +29,14 @@ class LinkUpdate
             $file     = $link->getFilename();
             $filename = $link->getThumbnail();
             $profile  = $this->profile->run();
+            $shortUrl = $link->getShortUrl();
+
+            if (
+                $dto->url != $link->getUrl()
+                && !empty($shortUrl)
+            ) {
+                $this->shortUrl->run($dto->url, $shortUrl);
+            }
 
             if ($dto->thumbnail) {
                 /** @var UploadedFile */
@@ -39,7 +49,8 @@ class LinkUpdate
 
             $this->repository->updateLink(new LinkUpdateDTO(array_merge($dto->values(), [
                 'thumbnail' => $filename,
-                'profile'   => $profile
+                'profile'   => $profile,
+                'shortUrl'  => $shortUrl,
             ])));
         });
     }

@@ -23,6 +23,10 @@ interface LinkEntity extends DateTimes, SoftDeletable
 
     public function setUrl(string $url): self;
 
+    public function getShortUrl(): ?string;
+
+    public function setShortUrl(string $shortUrl): self;
+
     public function getFilename(): string;
 
     public function getThumbnail(): string;

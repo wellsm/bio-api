@@ -14,5 +14,6 @@ final class LinkUpdateDTO extends DTO
     public ?ProfileEntity $profile;
     public string $title;
     public string $url;
+    public ?string $shortUrl;
     public string|SplFileInfo $thumbnail;
 }

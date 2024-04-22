@@ -19,6 +19,7 @@ use Hyperf\Stringable\Str;
  * @property int $category_id
  * @property string $title
  * @property string $url
+ * @property string $short_url
  * @property string $thumbnail
  * @property int $active
  * @property string $deleted_at
@@ -34,6 +35,7 @@ class Link extends Model implements LinkEntity
         'category_id',
         'title',
         'url',
+        'short_url',
         'thumbnail',
         'active',
         'fixed',
@@ -100,6 +102,18 @@ class Link extends Model implements LinkEntity
     public function setUrl(string $url): self
     {
         $this->attributes['url'] = $url;
+
+        return $this;
+    }
+
+    public function getShortUrl(): ?string
+    {
+        return $this->attributes['short_url'] ?? null;
+    }
+
+    public function setShortUrl(string $shortUrl): self
+    {
+        $this->attributes['short_url'] = $shortUrl;
 
         return $this;
     }

@@ -48,13 +48,14 @@ class LinkDatabaseRepository implements LinkRepository
             ->get();
     }
 
-    public function createLink(ProfileEntity $profile, LinkCreateDTO $dto, ?UploadDTO $upload): void
+    public function createLink(ProfileEntity $profile, LinkCreateDTO $dto, ?UploadDTO $upload, ?string $shorUrl = null): void
     {
         Link::create([
             'title'      => $dto->title,
             'url'        => $dto->url,
             'thumbnail'  => $upload->filename,
             'profile_id' => $profile->getId(),
+            'short_url'  => $shorUrl,
             'active'     => false
         ]);
     }

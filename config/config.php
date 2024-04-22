@@ -22,4 +22,9 @@ return [
             LogLevel::WARNING,
         ],
     ],
+    'short_url' => [
+        'base_uri' => env('SHLINK_BASE_URI', false),
+        'enabled'  => env('SHLINK_ENABLED', false),
+        'api_key'  => env('SHLINK_API_KEY', false),
+    ],
 ];

@@ -19,7 +19,7 @@ interface LinkRepository
 
     public function getLinksByProfile(ProfileEntity $profile);
 
-    public function createLink(ProfileEntity $profile, LinkCreateDTO $dto, ?UploadDTO $upload): void;
+    public function createLink(ProfileEntity $profile, LinkCreateDTO $dto, ?UploadDTO $upload, ?string $shortUrl = null): void;
 
     public function getLinkById(int $id): LinkEntity;
 

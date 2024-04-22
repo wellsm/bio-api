@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Application\Service\ShortUrl;
 
 use Application\Exception\BusinessException;
+use Core\DTO\ShortUrl\ShortUrlCreateDTO;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Hyperf\Contract\ConfigInterface;
@@ -22,7 +23,7 @@ class ShortUrlCreate
     ) {
     }
 
-    public function run(string $url): ?string
+    public function run(ShortUrlCreateDTO $dto): ?string
     {
         $enabled = $this->config->get('short_url.enabled');
 
@@ -33,7 +34,8 @@ class ShortUrlCreate
         $response = $this->api()->post(self::CREATE_URL, [
             RequestOptions::JSON => [
                 'findIfExists' => true,
-                'longUrl'      => $url
+                'longUrl'      => $dto->url,
+                'title'        => $dto->title,
             ],
         ]);
 

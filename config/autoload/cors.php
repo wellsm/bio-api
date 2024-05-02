@@ -1,6 +1,9 @@
 <?php
 
 declare(strict_types=1);
+
+use function Hyperf\Support\env;
+
 /**
  * This file is part of Hyperf.
  *
@@ -37,7 +40,7 @@ return [
     /*
      * Matches the request origin. `['*']` allows all origins. Wildcards can be used, eg `*.mydomain.com`
      */
-    'allowed_origins' => ['*'],
+    'allowed_origins' => explode('|', env('CORS_ALLOWED_ORIGINS', '*')),
 
     /*
      * Patterns that can be used with `preg_match` to match the origin.

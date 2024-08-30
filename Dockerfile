@@ -26,4 +26,4 @@ COPY . /var/www/app
 
 RUN composer install
 
-ENTRYPOINT ["/bin/sh", "-c" , "php bin/hyperf.php migrate && composer start"]
+ENTRYPOINT ["/bin/sh", "-c" , "php bin/hyperf.php migrate --force && composer start"]

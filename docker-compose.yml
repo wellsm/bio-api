@@ -21,11 +21,9 @@ services:
       - "host.docker.internal:host-gateway"
     depends_on:
       - bio-mysql
-      - bio-redis
       - bio-mailcatcher
     links:
       - "bio-mysql:database"
-      - "bio-redis:cache"
       - "bio-mailcatcher:mail"
 
   bio-mysql:
@@ -38,15 +36,6 @@ services:
     environment:
       - "MYSQL_DATABASE=bio"
       - "MYSQL_ROOT_PASSWORD=root"
-
-  bio-redis:
-    image: redis:alpine
-    command: redis-server
-    container_name: bio-redis
-    volumes:
-      - bio-redis-data:/data
-    ports:
-      - 7012:6379
 
   bio-mailcatcher:
     image: dockage/mailcatcher:0.8.2

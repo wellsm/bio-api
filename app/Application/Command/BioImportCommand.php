@@ -29,6 +29,9 @@ class BioImportCommand extends HyperfCommand
         $response = $this->client->create()->get($url);
 
         $html    = $response->getBody()->getContents();
+
+        dd($html);
+
         $crawler = new Crawler($html);
 
         $provider = $this->provider($url);

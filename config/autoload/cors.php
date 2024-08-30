@@ -4,14 +4,6 @@ declare(strict_types=1);
 
 use function Hyperf\Support\env;
 
-/**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
- */
 return [
     /*
      * The allowed_methods and allowed_headers options are case-insensitive.
@@ -35,7 +27,7 @@ return [
     /*
      * Matches the request method. `['*']` allows all methods.
      */
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['GET', 'POST', 'PUT', 'DELETE'],
 
     /*
      * Matches the request origin. `['*']` allows all origins. Wildcards can be used, eg `*.mydomain.com`

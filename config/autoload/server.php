@@ -38,6 +38,7 @@ return [
         Constant::OPTION_MAX_REQUEST           => 100000,
         Constant::OPTION_SOCKET_BUFFER_SIZE    => 2 * 1024 * 1024,
         Constant::OPTION_BUFFER_OUTPUT_SIZE    => 2 * 1024 * 1024,
+        Constant::OPTION_PACKAGE_MAX_LENGTH    => 16 * 1024 * 1024,
         Constant::OPTION_DOCUMENT_ROOT         => BASE_PATH . '/public',
         Constant::OPTION_ENABLE_STATIC_HANDLER => true,
     ],

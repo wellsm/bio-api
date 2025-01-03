@@ -26,4 +26,6 @@ COPY . /var/www/app
 
 RUN composer install
 
+RUN sed -i 's/\\Swoole\\Runtime::enableCoroutine(false)/\\Swoole\\Runtime::enableCoroutine(0)/' /var/www/app/vendor/hyperf/coroutine/src/Functions.php
+
 ENTRYPOINT ["/bin/sh", "-c" , "php bin/hyperf.php migrate --force && composer start"]

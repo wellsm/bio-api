@@ -6,6 +6,7 @@ use Application\Service\Link\LinkBioList;
 use Application\Service\Profile\ProfileShow;
 use Application\Service\ShortUrl\ShortUrlCreate;
 use Core\Entities\LinkEntity;
+use Core\Helper\SocialMedia;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Utils;
 use GuzzleHttp\Psr7\Response;
@@ -17,6 +18,8 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\DbConnection\Db;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Guzzle\ClientFactory;
+
+use function Hyperf\Collection\collect;
 
 #[Command(name: 'short-url:populate', description: 'Populate Links with ShortURL if Enabled')]
 class ShortUrlPopulateCommand extends HyperfCommand
@@ -39,6 +42,8 @@ class ShortUrlPopulateCommand extends HyperfCommand
 
     public function handle()
     {
+        dd(collect(array_column(SocialMedia::ICONS, 'media'))->mapWithKeys(fn ($media) => [$media => $media])->toArray());
+
         $enabled = $this->config->get('short_url.enabled');
 
         if (!$enabled) {

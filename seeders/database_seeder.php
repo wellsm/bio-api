@@ -2,128 +2,180 @@
 
 declare(strict_types=1);
 
-use App\Model\Link;
-use App\Model\Profile;
-use App\Model\SocialMedia as ModelSocialMedia;
 use Application\Constants\Env;
-use Carbon\Carbon;
+use Core\Enums\BioLayout;
+use Core\Enums\IconStyle;
 use Core\Helper\SocialMedia;
 use Hyperf\Database\Schema\Schema;
 use Hyperf\Database\Seeders\Seeder;
 use Hyperf\DbConnection\Db;
 use Hyperf\Stringable\Str;
-use Ramsey\Uuid\Uuid;
 
 use function Hyperf\Collection\collect;
-use function Hyperf\Collection\data_fill;
 
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $database = require_once BASE_PATH . '/storage/database/insert.php';
-        $medias   = collect($database['social_medias'])
-            ->map(fn ($media, $index) => [
-                ...$media,
-                'name'  => SocialMedia::getName($media['icon']),
-                'order' => ++$index
-            ])
-            ->toArray();
-
-        Schema::disableForeignKeyConstraints();
-
-        Db::table('users')->truncate();
-        Db::table('users')->insert($database['user']);
-
-        $user    = Db::table('users')->first();
-        $profile = $database['profile'];
-
-        Db::table('profiles')->truncate();
-        Db::table('profiles')->insert(array_merge($profile, [
-            'user_id'  => $user['id'],
-            'username' => Str::slug($profile['name'])
-        ]));
-
-        $configs = collect($database['configurations'])
-            ->map(fn ($value, $key) => compact('key', 'value'))
-            ->values()
-            ->toArray();
-
-        $profile = Db::table('profiles')->first();
-        $links   = array_map(fn ($link) => [
-            'title'      => trim($link['title']),
-            'url'        => trim($link['url']),
-            'thumbnail'  => trim($link['thumbnail']),
-            'profile_id' => $profile['id'],
-            'active'     => 1,
-        ], $database['links']);
-
-        data_fill($configs, '*.profile_id', $profile['id']);
-        data_fill($medias, '*.profile_id', $profile['id']);
-
-        Db::table('social_medias')->truncate();
-        Db::table('social_medias')->upsert($medias, ['url']);
-
-        Db::table('links')->truncate();
-        Db::table('links')->upsert($links, ['url']);
-
-        Db::table('configurations')->truncate();
-        Db::table('configurations')->upsert($configs, ['key', 'value']);
-
         if (Env::isLocal() === false) {
             return;
         }
-
-        $links        = Db::table('links')->get();
-        $medias       = Db::table('social_medias')->get();
-        $interactions = [];
-
-        $months = Carbon::now()->subMonths(11)->monthsUntil(Carbon::now());
-        $months = $months->map(function (Carbon $date) { 
-            return $date->year . '-' . $date->month;
-        });
-
-        $months = iterator_to_array($months);
-
-        foreach ($links as $link) {
-            foreach ($months as $month) {
-                [$year, $month] = explode('-', $month);
-
-                foreach (range(1, random_int(5, 20)) as $i) {
-                    $interactions[] = [
-                        'id'                => Uuid::uuid4()->toString(),
-                        'interactable_id'   => $link['id'],
-                        'interactable_type' => Link::class,
-                        'created_at'        => Carbon::now()->setYear($year)->setMonth($month)->format('Y-m-d H:i:s'),
-                    ];
-                }
-            }
-        }
-
-        foreach ($medias as $media) {
-            foreach (range(1, random_int(50, 200)) as $i) {
-                $interactions[] = [
-                    'id'                => Uuid::uuid4()->toString(),
-                    'interactable_id'   => $media['id'],
-                    'interactable_type' => ModelSocialMedia::class,
-                    'created_at'        => date('Y-m-d H:i:s'),
-                ];
-            }
-        }
-
-        foreach (range(1, random_int(500, 5000)) as $i) {
-            $interactions[] = [
-                'id'                => Uuid::uuid4()->toString(),
-                'interactable_id'   => $profile['id'],
-                'interactable_type' => Profile::class,
-                'created_at'        => date('Y-m-d H:i:s'),
-            ];
-        }
-
-        foreach (array_chunk($interactions, 1000) as $interactions) {
-            Db::table('interactions')->upsert($interactions, ['id']);
-        }
-
+        
+        Schema::disableForeignKeyConstraints();
+        
+        $this->clearTables();
+        
+        $database = $this->getLocalUsersData();
+        
+        $this->createUserWithProfile($database);
+        
         Schema::enableForeignKeyConstraints();
+    }
+    
+    private function clearTables(): void
+    {
+        $tables = [
+            'interactions',
+            'collection_link', 
+            'collections',
+            'configurations',
+            'social_medias',
+            'links',
+            'profiles',
+            'password_tokens',
+            'users'
+        ];
+        
+        foreach ($tables as $table) {
+            Db::table($table)->truncate();
+        }
+    }
+    
+    private function getLocalUsersData(): array
+    {
+        return [
+            'user' => [
+                'name' => 'John Doe',
+                'email' => 'john@example.com',
+                'password' => password_hash('123456', PASSWORD_DEFAULT),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            'profile' => [
+                'name' => 'John Doe',
+                'avatar' => 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            'links' => [
+                [
+                    'title' => 'My Personal Blog',
+                    'url' => 'https://john-doe.dev',
+                    'thumbnail' => 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=300&h=200&fit=crop',
+                ],
+                [
+                    'title' => 'Portfolio of Projects',
+                    'url' => 'https://github.com/john-doe',
+                    'thumbnail' => 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=300&h=200&fit=crop',
+                ],
+                [
+                    'title' => 'Online Resume',
+                    'url' => 'https://john-doe.dev/cv',
+                    'thumbnail' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop',
+                ],
+            ],
+            'social_medias' => [
+                [
+                    'icon' => 'fab instagram',
+                    'url' => 'https://instagram.com/john-doe',
+                    'active' => true,
+                    'text_color' => '#ffffff',
+                    'background' => 'linear-gradient(45deg, #f09433 0%, #e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)',
+                ],
+                [
+                    'icon' => 'fab twitter',
+                    'url' => 'https://twitter.com/john-doe',
+                    'active' => true,
+                    'text_color' => '#ffffff',
+                    'background' => '#1DA1F2',
+                ],
+                [
+                    'icon' => 'fab linkedin',
+                    'url' => 'https://linkedin.com/in/john-doe',
+                    'active' => true,
+                    'text_color' => '#ffffff',
+                    'background' => '#1D4ED8',
+                ],
+                [
+                    'icon' => 'fab github',
+                    'url' => 'https://github.com/john-doe',
+                    'active' => true,
+                    'text_color' => '#ffffff',
+                    'background' => '#000000',
+                ],
+            ],
+            'configurations' => [
+                'layout' => BioLayout::List->value,
+                'icon-style' => IconStyle::Circle->value,
+                'tag-pinterest' => 'john-doe',
+                'enable-search' => true,
+            ],
+        ];
+    }
+    
+    private function createUserWithProfile(array $data): void
+    {
+        Db::table('users')
+            ->insert($data['user']);
+
+        $user = Db::table('users')
+            ->where('email', $data['user']['email'])
+            ->first();
+        
+        Db::table('profiles')
+            ->insert(array_merge($data['profile'], [
+                'user_id'  => $user['id'],
+                'username' => Str::slug($data['profile']['name'])
+            ]));
+
+        $profile = Db::table('profiles')
+            ->where('user_id', $user['id'])
+            ->first();
+        
+        $medias = collect($data['social_medias'])
+            ->map(fn ($media, $index) => [
+                ...$media,
+                'name' => SocialMedia::getName($media['icon']),
+                'order' => ++$index,
+                'profile_id' => $profile['id'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ])
+            ->toArray();
+        
+        $links = array_map(fn ($link) => [
+            'title' => trim($link['title']),
+            'url' => trim($link['url']),
+            'thumbnail' => trim($link['thumbnail']),
+            'profile_id' => $profile['id'],
+            'active' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ], $data['links']);
+        
+        $configs = collect($data['configurations'])
+            ->map(fn ($value, $key) => [
+                'key' => $key,
+                'value' => $value,
+                'profile_id' => $profile['id'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ])
+            ->values()
+            ->toArray();
+        
+        Db::table('social_medias')->insert($medias);
+        Db::table('links')->insert($links);
+        Db::table('configurations')->insert($configs);
     }
 }

@@ -1,10 +1,5 @@
-version: "3.8"
-
 volumes:
   bio-mysql-data:
-    driver: local
-
-  bio-redis-data:
     driver: local
 
 services:
@@ -21,10 +16,6 @@ services:
       - "host.docker.internal:host-gateway"
     depends_on:
       - bio-mysql
-      - bio-mailcatcher
-    links:
-      - "bio-mysql:database"
-      - "bio-mailcatcher:mail"
 
   bio-mysql:
     build: ./docker/mysql
@@ -36,10 +27,3 @@ services:
     environment:
       - "MYSQL_DATABASE=bio"
       - "MYSQL_ROOT_PASSWORD=root"
-
-  bio-mailcatcher:
-    image: dockage/mailcatcher:0.8.2
-    container_name: bio-mailcatcher
-    ports:
-      - "7013:1080"
-      - "7014:1025"

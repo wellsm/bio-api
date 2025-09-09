@@ -12,3 +12,5 @@ ENV TIMEZONE="America/Sao_Paulo"
 
 RUN ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 RUN echo "${TIMEZONE}" > /etc/timezone
+
+RUN git config --global --add safe.directory /var/www/app

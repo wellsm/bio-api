@@ -1,63 +1,279 @@
-# Introduction
+# Bio API
 
-This is a skeleton application using the Hyperf framework. This application is meant to be used as a starting place for those looking to get their feet wet with Hyperf Framework.
+A modern bio link management API built with [Hyperf](https://hyperf.io) framework. This application allows users to create and manage their bio pages with links, social media profiles, and customizable configurations.
 
-# Requirements
+## ✨ Features
 
-Hyperf has some requirements for the system environment, it can only run under Linux and Mac environment, but due to the development of Docker virtualization technology, Docker for Windows can also be used as the running environment under Windows.
+- 👤 **User Management** - Registration, authentication, and profiles
+- 🔗 **Link Management** - Create, organize, and track link clicks
+- 📱 **Social Media Integration** - Connect various social platforms
+- 📚 **Collections** - Group links into organized collections
+- 🎨 **Customizable Themes** - Multiple layouts and styling options
+- 📊 **Analytics** - Track interactions and engagement
+- 🔧 **Configuration System** - Flexible settings per profile
 
-The various versions of Dockerfile have been prepared for you in the [hyperf/hyperf-docker](https://github.com/hyperf/hyperf-docker) project, or directly based on the already built [hyperf/hyperf](https://hub.docker.com/r/hyperf/hyperf) Image to run.
+## 🚀 Quick Start
 
-When you don't want to use Docker as the basis for your running environment, you need to make sure that your operating environment meets the following requirements:  
+#### Prerequisites
 
- - PHP >= 8.1
- - Any of the following network engines
-   - Swoole PHP extension >= 5.0，with `swoole.use_shortname` set to `Off` in your `php.ini`
-   - Swow PHP extension >= 1.3
- - JSON PHP extension
- - Pcntl PHP extension
- - OpenSSL PHP extension （If you need to use the HTTPS）
- - PDO PHP extension （If you need to use the MySQL Client）
- - Redis PHP extension （If you need to use the Redis Client）
- - Protobuf PHP extension （If you need to use the gRPC Server or Client）
+- **Docker** and **Docker Compose** (required)
 
-# Installation using Composer
-
-The easiest way to create a new Hyperf project is to use [Composer](https://getcomposer.org/). If you don't have it already installed, then please install as per [the documentation](https://getcomposer.org/download/).
-
-To create your new Hyperf project:
+#### 1. Clone the Repository
 
 ```bash
-composer create-project hyperf/hyperf-skeleton path/to/install
+git clone https://github.com/wellsm/bio-web.git
+cd bio-api
 ```
 
-If your development environment is based on Docker you can use the official Composer image to create a new Hyperf project:
+#### 2. Environment Configuration
+
+Create your environment file:
 
 ```bash
-docker run --rm -it -v $(pwd):/app composer create-project --ignore-platform-reqs hyperf/hyperf-skeleton path/to/install
+cp .env.example .env
 ```
 
-# Getting started
-
-Once installed, you can run the server immediately using the command below.
+Edit `.env` with your settings:
 
 ```bash
-cd path/to/install
+APP_NAME=bio
+APP_KEY=base64:dzJkdzY1eWQxZGRmbGdtbnhwdzhscTJuYmZ5MWxiOGw=
+APP_ENV=local
+
+CORS_ALLOWED_ORIGINS=*
+
+DB_DRIVER=mysql
+DB_HOST=bio-mysql
+DB_PORT=3306
+DB_DATABASE=bio
+DB_USERNAME=root
+DB_PASSWORD=root
+DB_CHARSET=utf8mb4
+DB_COLLATION=utf8mb4_unicode_ci
+DB_PREFIX=
+
+REDIS_HOST=cache
+REDIS_AUTH=(null)
+REDIS_PORT=6379
+REDIS_DB=0
+
+SMTP_HOST=email
+SMTP_AUTH=(false)
+SMTP_USERNAME=dev@bio.com
+SMTP_PASSWORD=
+SMTP_ENCRYPTION=
+SMTP_PORT=1025
+
+SHLINK_ENABLED=false
+SHLINK_API_KEY=
+SHLINK_BASE_URI=
+```
+
+#### 3. Start with Docker (Recommended)
+
+```bash
+# Build and start containers
+docker compose up -d
+
+# Check containers are running
+docker compose ps
+```
+
+The application will be available at:
+- **API**: http://localhost:7010
+
+#### 4. Database Setup
+
+Run migrations:
+
+```bash
+docker compose exec bio-php php bin/hyperf.php migrate --seed
+```
+
+This creates sample data:
+- **User**: John Doe (`john@example.com`) - Developer profile
+- **Password**: `123456`
+- **Links**: Personal blog, portfolio, resume
+- **Social Media**: Instagram, Twitter, LinkedIn, GitHub
+
+## 🛠️ Development
+
+### Available Commands
+
+```bash
+# Install dependencies
+docker compose exec bio-php composer install
+
+# Run migrations
+docker compose exec bio-php php bin/hyperf.php migrate
+
+# Code style check
+docker compose exec bio-php vendor/bin/php-cs-fixer fix
+
+# Static analysis
+docker compose exec bio-php vendor/bin/phpstan analyze
+```
+
+### Project Structure
+
+```
+bio-api/
+├── app/
+│   ├── Application/         # Application layer
+│   │   ├── Command/         # Console commands
+│   │   ├── Http/           # Controllers, Middleware, Requests
+│   │   └── Service/        # Business logic services
+│   ├── Core/               # Core domain logic
+│   │   ├── Entities/       # Domain entities
+│   │   ├── Repositories/   # Repository interfaces
+│   │   └── ValueObjects/   # Value objects
+│   ├── Infrastructure/     # Infrastructure layer
+│   │   └── Repositories/   # Repository implementations
+│   └── Model/              # Eloquent models
+├── config/                 # Configuration files
+├── migrations/             # Database migrations
+├── seeders/               # Database seeders
+├── public/                # Public assets and documentation
+├── storage/               # Logs, cache, uploads
+└── docker/                # Docker configuration
+```
+
+## 🔗 API Documentation
+
+Once the application is running, visit:
+- **Swagger UI**: http://localhost:7010/api/documentation
+- **API Spec**: `public/documentation/api.yml`
+
+## 📊 Database
+
+### Connection
+
+- **Host**: localhost (external), bio-mysql (internal)
+- **Port**: 7011 (external), 3306 (internal)
+- **Database**: bio
+- **Username**: root
+- **Password**: root
+
+### Sample Data
+
+The seeder creates:
+- 1 complete user profile (John Doe)
+- 3 sample links
+- 4 social media connections  
+- Custom configuration settings
+
+## 🐳 Docker Services
+
+### bio-php
+- **Image**: Custom PHP 8.1+ with Swoole
+- **Port**: 7010:9501
+- **Purpose**: Main application server
+
+### bio-mysql
+- **Image**: Custom MySQL 8.0
+- **Port**: 7011:3306
+- **Purpose**: Database server
+- **Data**: Persisted in `bio-mysql-data` volume
+
+## 🛠️ Local Development (Without Docker)
+
+### Requirements
+
+- PHP 8.1+
+- Swoole extension >= 5.0
+- MySQL 8.0+
+- Composer
+
+### Setup
+
+```bash
+# Install dependencies
+composer install
+
+# Start development server
 php bin/hyperf.php start
+
+# Or watch for changes
+composer watch
 ```
 
-Or if in a Docker based environment you can use the `docker-compose.yml` provided by the template:
+## 🚨 Troubleshooting
 
+### Common Issues
+
+**1. Port already in use**
 ```bash
-cd path/to/install
-docker-compose up
+# Check what's using the port
+lsof -i :7010
+
+# Change port in compose.yml or .env
 ```
 
-This will start the cli-server on port `9501`, and bind it to all network interfaces. You can then visit the site at `http://localhost:9501/` which will bring up Hyperf default home page.
+**2. Database connection failed**
+```bash
+# Check MySQL is running
+docker compose ps bio-mysql
 
-## Hints
+# Check logs
+docker compose logs bio-mysql
+```
 
-- A nice tip is to rename `hyperf-skeleton` of files like `composer.json` and `docker-compose.yml` to your actual project name.
-- Take a look at `config/routes.php` and `app/Controller/IndexController.php` to see an example of a HTTP entrypoint.
+**3. Permission issues**
+```bash
+# Fix storage permissions
+chmod -R 755 storage/
+```
 
-**Remember:** you can always replace the contents of this README.md file to something that fits your project description.
+**4. Swoole not installed**
+```bash
+# Install Swoole (local development)
+pecl install swoole
+```
+
+### Logs
+
+Check application logs:
+```bash
+# View PHP logs
+docker compose logs bio-php
+
+# View MySQL logs
+docker compose logs bio-mysql
+
+# Follow logs in real-time
+docker compose logs -f
+```
+
+## 📝 Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `APP_ENV` | `local` | Application environment |
+| `APP_DEBUG` | `true` | Debug mode |
+| `PORT` | `9501` | Server port |
+| `DB_HOST` | `bio-mysql` | Database host |
+| `DB_DATABASE` | `bio` | Database name |
+| `DB_USERNAME` | `root` | Database user |
+| `DB_PASSWORD` | `root` | Database password |
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and linting
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: Check the `public/documentation` directory
+- **Issues**: Create a GitHub issue
+- **API Docs**: Visit `/api/documentation` endpoint when running
+
+---
+
+**Happy coding!** 🎉

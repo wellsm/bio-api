@@ -21,7 +21,7 @@ A modern bio link management API built with [Hyperf](https://hyperf.io) framewor
 #### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/wellsm/bio-web.git
+git clone https://github.com/wellsm/bio-api.git
 cd bio-api
 ```
 
@@ -95,6 +95,11 @@ This creates sample data:
 - **Password**: `123456`
 - **Links**: Personal blog, portfolio, resume
 - **Social Media**: Instagram, Twitter, LinkedIn, GitHub
+
+#### 5. Frontend Setup
+
+If you want to use the frontend, you can use **bio-web** repository or create your own. <br>
+Follow the instructions in https://github.com/wellsm/bio-web
 
 ## 🛠️ Development
 

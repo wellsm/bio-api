@@ -42,7 +42,11 @@ return [
     /*
      * Sets the Access-Control-Allow-Headers response header. `['*']` allows all headers.
      */
-    'allowed_headers' => ['*'],
+    'allowed_headers' => [
+        'Content-Type',
+        'X-Profile-Key',
+        'Authorization'
+    ],
 
     /*
      * Sets the Access-Control-Expose-Headers response header with these headers.
@@ -57,5 +61,5 @@ return [
     /*
      * Sets the Access-Control-Allow-Credentials header.
      */
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 ];

@@ -26,9 +26,7 @@ Router::addGroup('/api', function () {
         Router::get('/bio', Controller\Bio\IndexController::class);
         Router::get('/bio/collections/{collection}', Controller\Bio\CollectionController::class);
         Router::post('/interaction', Controller\Interaction\InteractionCreateController::class);
-    }, [
-        'middleware' => [VerifyProfileKeyMiddleware::class]
-    ]);
+    });
 
     Router::addGroup('', function () {
         // ------ Profile ------

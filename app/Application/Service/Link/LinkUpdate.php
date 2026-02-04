@@ -8,8 +8,10 @@ use Application\Service\Profile\ProfileShow;
 use Application\Service\ShortUrl\ShortUrlUpdate;
 use Core\DTO\Link\LinkUpdateDTO;
 use Core\Repositories\LinkRepository;
+use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\DbConnection\Db;
 use Hyperf\HttpMessage\Upload\UploadedFile;
+use Hyperf\Stringable\Str;
 
 class LinkUpdate
 {
@@ -18,6 +20,7 @@ class LinkUpdate
         private ShortUrlUpdate $shortUrl,
         private LinkShow $link,
         private LinkRepository $repository,
+        private StdoutLoggerInterface $logger,
         private Db $db,
     ) {
     }
@@ -42,7 +45,10 @@ class LinkUpdate
                 /** @var UploadedFile */
                 $thumbnail = $dto->thumbnail;
                 $path      = BASE_PATH . '/public';
-                $filename  = "/uploads/{$file}.{$thumbnail->getExtension()}";
+                $file      = $thumbnail->getClientFilename();
+                $filename  = "/uploads/{$file}";
+
+                $this->logger->info("Uploading thumbnail to {$path}{$filename}");
 
                 $thumbnail->moveTo($path . $filename);
             }
